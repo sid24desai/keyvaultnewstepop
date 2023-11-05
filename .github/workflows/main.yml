@@ -1,0 +1,28 @@
+name: Azure Key Vault Secrets
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v2
+
+    - name: Login to Azure
+      uses: azure/login@v1
+      with:
+        creds: ${{ secrets.AZURE_CREDENTIALS }}
+   
+    - name: Get Key Vault Secret
+      run: |
+        value1=$(az keyvault secret show --name secret2 --vault-name silicon-keyvault --query value -o tsv)
+        echo "Secret Value: $value1"
+        echo "::set-output name=secret_value::$value1"
+    
+    - name: Output Secret Value
+      run: echo "Secret Value is ${{ steps.Get_Key_Vault_Secret.outputs.secret_value }}"
