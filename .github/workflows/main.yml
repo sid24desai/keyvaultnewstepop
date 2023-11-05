@@ -22,7 +22,8 @@ jobs:
       run: |
         value1=$(az keyvault secret show --name secret2 --vault-name silicon-keyvault --query value -o tsv)
         echo "Secret Value: $value1"
-        echo "::set-output name=secret_value::$value1"
+        echo "SECRET_VALUE=$value1" >> $GITHUB_ENV
     
     - name: Output Secret Value
-      run: echo "Secret Value is ${{ steps.Get_Key_Vault_Secret.outputs.secret_value }}"
+      run: echo "Secret Value is $SECRET_VALUE"
+
